@@ -5,32 +5,33 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Items } from './entities/item.entity';
 
-
 @Injectable()
 export class ItemsService {
+  constructor(@InjectModel(Items.name) private readonly itemsModel: Model<Items>) {}
 
-  constructor(@InjectModel(Items.name) private ItemsModeil : Model<Items>){}
-
-
-  create(createItemDto: CreateItemDto): Promise<Items> {
-    const results = new this.ItemsModeil(createItemDto)
-    return results.save()
+  // Yangi item yaratish
+  async create(createItemDto: CreateItemDto): Promise<Items> {
+    const newItem = new this.itemsModel(createItemDto);
+    return await newItem.save();
   }
 
-  findAll(): Promise<Items[]> {
-    return this.ItemsModeil.find().exec()
+  // Barcha itemlarni olish
+  async findAll(): Promise<Items[]> {
+    return await this.itemsModel.find().exec();
   }
 
-  findOne(id: number): Promise<Items> {
-    return  this.ItemsModeil.findById(id).exec()
+  // Bir itemni id bo'yicha olish
+  async findOne(id: string): Promise<Items> {
+    return await this.itemsModel.findById(id).exec();
   }
 
-  update(id: number, updateItemDto: UpdateItemDto): Promise<Items> {
-    return this.ItemsModeil.findByIdAndUpdate(id, updateItemDto, { new: true }).exec();
+  // Itemni yangilash
+  async update(id: string, updateItemDto: UpdateItemDto): Promise<Items> {
+    return await this.itemsModel.findByIdAndUpdate(id, updateItemDto, { new: true }).exec();
   }
-  
 
-  remove(id: number):Promise<Items> {
-    return this.ItemsModeil.findByIdAndDelete(id).exec()
+  // Itemni o'chirish
+  async remove(id: string): Promise<Items> {
+    return await this.itemsModel.findByIdAndDelete(id).exec();
   }
 }

@@ -7,28 +7,33 @@ import { UpdateItemDto } from './dto/update-item.dto';
 export class ItemsController {
   constructor(private readonly itemsService: ItemsService) {}
 
+  // Yangi item yaratish
   @Post()
-  create(@Body() createItemDto: CreateItemDto) {
-    return this.itemsService.create(createItemDto);
+  async create(@Body() createItemDto: CreateItemDto) {
+    return await this.itemsService.create(createItemDto);
   }
 
+  // Barcha itemlarni olish
   @Get()
-  findAll() {
-    return this.itemsService.findAll();
+  async findAll() {
+    return await this.itemsService.findAll();
   }
 
+  // Bir itemni id bo'yicha olish
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.itemsService.findOne(+id);
+  async findOne(@Param('id') id: string) { // id parametri string sifatida olinadi
+    return await this.itemsService.findOne(id);
   }
 
+  // Itemni yangilash
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateItemDto: UpdateItemDto) {
-    return this.itemsService.update(+id, updateItemDto);
+  async update(@Param('id') id: string, @Body() updateItemDto: UpdateItemDto) {
+    return await this.itemsService.update(id, updateItemDto);
   }
 
+  // Itemni o'chirish
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.itemsService.remove(+id);
+  async remove(@Param('id') id: string) {
+    return await this.itemsService.remove(id);
   }
 }
