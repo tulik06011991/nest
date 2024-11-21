@@ -3,6 +3,7 @@ import { ItemsService } from './items.service';
 import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Items } from './entities/item.entity';
 
 @ApiTags('items') // API hujjatlarini yaratishda yordam beradi
 @Controller('items')
