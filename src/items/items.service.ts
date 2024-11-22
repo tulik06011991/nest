@@ -3,35 +3,49 @@ import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Items } from './entities/item.entity';
+import { Item } from './entities/item.entity';
+import { NotFoundException } from '@nestjs/common';
 
 @Injectable()
 export class ItemsService {
-  constructor(@InjectModel(Items.name) private readonly itemsModel: Model<Items>) {}
 
-  // Yangi item yaratish
-  async create(createItemDto: CreateItemDto): Promise<Items> {
-    const newItem = new this.itemsModel(createItemDto);
-    return await newItem.save();
+  constructor(@InjectModel('Item') private readonly ItemModel: Model<Item>){}
+  async create(createItemDto: CreateItemDto): Promise<Item> {
+    const newItems = await new this.ItemModel(createItemDto)
+    return newItems.save()
   }
 
-  // Barcha itemlarni olish
-  async findAll(): Promise<Items[]> {
-    return await this.itemsModel.find().exec();
+  findAll():Promise<Item[]> {
+    return this.ItemModel.find().exec()
   }
 
-  // Bir itemni id bo'yicha olish
-  async findOne(id: string): Promise<Items> {
-    return await this.itemsModel.findById(id).exec();
+  async findOne(id: string): Promise<Item> {
+    const item = await this.ItemModel.findById(id).exec();
+  
+    if (!item) {
+      // If item is not found, throw a 404 Not Found exception
+      throw new NotFoundException('Item not found');
+    }
+  
+    // If item is found, return it with a 200 OK status code
+    return item;
   }
 
-  // Itemni yangilash
-  async update(id: string, updateItemDto: UpdateItemDto): Promise<Items> {
-    return await this.itemsModel.findByIdAndUpdate(id, updateItemDto, { new: true }).exec();
+  
+
+async update(id: string, updateItemDto: UpdateItemDto): Promise<Item> {
+  // Correct usage of findByIdAndUpdate
+  const item = await this.ItemModel.findByIdAndUpdate(id, updateItemDto, { new: true }).exec();
+
+  if (!item) {
+    throw new NotFoundException('Malumot topilmadi');  // Throw 404 if item not found
   }
 
-  // Itemni o'chirish
-  async remove(id: string): Promise<Items> {
-    return await this.itemsModel.findByIdAndDelete(id).exec();
+  return item;  // Return the updated item
+}
+
+
+  remove(id: number) {
+    return `This action removes a #${id} item`;
   }
 }
