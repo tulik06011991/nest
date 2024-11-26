@@ -9,7 +9,11 @@ import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(cookieParser());
-  app.use(csurf())
+  app.use(cookieParser())
+
+  // CSRF himoyasi middleware'ni qo'shish
+  app.use(csurf({ cookie: true }));
+ 
   app.useGlobalPipes(
     new ValidationPipe({
       forbidNonWhitelisted: true,
