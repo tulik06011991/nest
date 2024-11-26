@@ -8,6 +8,7 @@ import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import * as dotenv from 'dotenv';
 import { Response } from 'express'; // import express Response
+import { Throttle } from '@nestjs/throttler';
 
 dotenv.config(); // .env faylini yuklash
 

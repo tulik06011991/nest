@@ -1,9 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Product, ProductSchema } from './entities/product.entity';
 
 @Injectable()
 export class ProductService {
+
+  constructor(@InjectModel("Product")  private readonly ProductModel: Model<Product>){}
   create(createProductDto: CreateProductDto) {
     return 'This action adds a new product';
   }
